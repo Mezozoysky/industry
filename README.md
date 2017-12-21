@@ -1,2 +1,2 @@
 # industry
-Little header-only library with factories and factories of factories.
+Little header-only library with easy factories
