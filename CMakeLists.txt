@@ -29,7 +29,10 @@ set( CMAKE_CXX_STANDARD 11 )
 set( CMAKE_CXX_STANDARD_REQURED ON )
 
 
-option( INDUSTRY_BUILD_UT "Build unit-tests"  ON )
+option( BUILD_UT "Build unit-tests"  ON )
+find_package( Doxygen )
+option( BUILD_DOCS "Build the HTML based documentation (requires Doxygen)" ${DOXYGEN_FOUND} )
+
 
 
 if ( ${CMAKE_SYSTEM_NAME} MATCHES "Linux" )
@@ -39,7 +42,7 @@ elseif ( ${CMAKE_SYSTEM_NAME} MATCHES "Darwin" )
 elseif ( ${CMAKE_SYSTEM_NAME} MATCHES "Windows" )
     set( HOST_OS_WINDOWS TRUE )
 else ()
-    set( HOST_OS_UNKNOWN)
+    set( HOST_OS_UNKNOWN )
     message( WARNING "UNKNOWN HOST OS! Let us hope for the best!" )
 endif ()
 
@@ -49,12 +52,15 @@ message( "System version: ${CMAKE_SYSTEM_VERSION}" )
 message( "Compiler name: ${CMAKE_CXX_COMPILER_ID}" )
 message( "Compiler version: ${CMAKE_CXX_COMPILER_VERSION}" )
 
-if ( INDUSTRY_BUILD_UT )
+if ( BUILD_UT )
     set( Catch_USE_SINGLE_INCLUDE TRUE )
     find_package( Catch REQUIRED )
-endif ( INDUSTRY_BUILD_UT )
+endif ( BUILD_UT )
 
 #
 # Modules
 #
 add_subdirectory( "industry" )
+if ( BUILD_DOCS )
+    add_subdirectory( "doc" )
+endif()

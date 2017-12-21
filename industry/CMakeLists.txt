@@ -36,6 +36,6 @@ install(
     DESTINATION include/${MODULE_NSPATH}
     )
 
-if ( INDUSTRY_BUILD_UT )
+if ( BUILD_UT )
     add_subdirectory( ${MODULE_ROOT}/ut )
-endif ( INDUSTRY_BUILD_UT )
+endif ( BUILD_UT )
