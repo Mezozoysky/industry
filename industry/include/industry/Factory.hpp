@@ -56,11 +56,10 @@ public:
 template < typename AbstractionT, typename IdT = std::string >
 class Factory : public FactoryMarker
 {
-private:
+public:
     /// Alias type for object creation functions
     using Creator = std::function< AbstractionT*() >;
 
-public:
     using Id = IdT; ///< Alias type for specified id type
     using Abstraction = AbstractionT; ///< Alias type for specified abstraction type
 
@@ -73,9 +72,13 @@ public:
     template < typename ReqT >
     static ReqT* create();
 
-    /// \brief Register the id for specified derived type ReqT
+    /// \brief Register id for specified derived type ReqT with default creator
     template < typename RegT >
     bool registerId( const Id& id ) noexcept;
+
+    /// \brief Register id for specified derived type ReqT with given creator
+    template < typename RegT >
+    bool registerId( const Id& id, const Creator& creator ) noexcept;
 
     /// \brief Create an object of type registered with the id and return pointer to it
     AbstractionT* create( const IdT& id ) const;
@@ -114,6 +117,26 @@ bool Factory< AbstractionT, IdT >::registerId( const IdT& id ) noexcept
     }
 
     mMap.insert( std::pair< Id, Creator >( id, std::bind( Factory::create< RegT > ) ) );
+    return ( true );
+}
+
+template < typename AbstractionT, typename IdT >
+template < typename RegT >
+bool Factory< AbstractionT, IdT >::registerId(
+const IdT& id, const Factory< AbstractionT, IdT >::Creator& creator ) noexcept
+{
+    static_assert( std::is_default_constructible< RegT >::value,
+                   "RegT should be default constructible" );
+
+    static_assert( std::is_base_of< AbstractionT, RegT >::value,
+                   "RegT should extend AbstractionT" );
+
+    if ( mMap.count( id ) )
+    {
+        return ( false );
+    }
+
+    mMap.insert( std::pair< Id, Creator >( id, creator ) );
     return ( true );
 }
 

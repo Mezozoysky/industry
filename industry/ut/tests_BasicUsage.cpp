@@ -78,6 +78,21 @@ TEST_CASE( "Basic Factory usage with std::string ids", "[Factory]" )
         delete objBaseA;
         objBaseA = nullptr;
     }
+
+    // register id with custom creator
+    factory.registerId<DerivedA0A>( "0A+", []() {
+        auto obj = new DerivedA0A();
+        obj->setControlString( "DerivedA0A+" );
+        return ( obj );
+    } );
+
+    // create derived by id with custom creator
+    {
+        auto objA0A( factory.create( "0A+" ) );
+        REQUIRE( objA0A != nullptr );
+        REQUIRE( objA0A->getControlString() == "DerivedA0A+" );
+        delete objA0A;
+    }
 }
 
 TEST_CASE( "Basic Industry usage with std::string ids", "[Industry]" )
