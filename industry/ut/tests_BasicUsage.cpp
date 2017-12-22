@@ -13,19 +13,19 @@ using FactoryAPtr = std::shared_ptr< FactoryA >;
 
 TEST_CASE( "Basic Factory usage with std::string ids", "[Factory]" )
 {
-    Factory< BaseA > factory;
-
     // static base creation
     {
-        BaseA* objBaseA( Factory< BaseA >::create() );
+        BaseA* objBaseA( Factory< BaseA >::create< BaseA >() );
         REQUIRE( objBaseA->getControlString() == "BaseA" );
         delete objBaseA;
         objBaseA = nullptr;
     }
 
+    Factory< BaseA > factory;
+
     // "dynamic" base creation (using static create function from object)
     {
-        BaseA* objBaseA( factory.create() );
+        BaseA* objBaseA( factory.create< BaseA >() );
         REQUIRE( objBaseA->getControlString() == "BaseA" );
         delete objBaseA;
         objBaseA = nullptr;
@@ -88,7 +88,7 @@ TEST_CASE( "Basic Industry usage with std::string ids", "[Industry]" )
         {
             auto factoryA( industry.registerFactory< BaseA >() );
             REQUIRE( industry.hasFactory< BaseA >() );
-            auto objA( factoryA->create() );
+            auto objA( factoryA->create< BaseA >() );
             REQUIRE( objA != nullptr );
             REQUIRE( objA->getControlString() == "BaseA" );
             delete objA;
@@ -102,14 +102,14 @@ TEST_CASE( "Basic Industry usage with std::string ids", "[Industry]" )
 
         {
             auto factoryA{ industry.getFactory< BaseA >() };
-            auto objA( factoryA->create() );
+            auto objA( factoryA->create< BaseA >() );
             REQUIRE( objA != nullptr );
             delete objA;
             objA = nullptr;
         }
 
         {
-            auto objA( industry.getFactory< BaseA >()->create() );
+            auto objA( industry.getFactory< BaseA >()->create< BaseA >() );
             REQUIRE( objA != nullptr );
             delete objA;
             objA = nullptr;
@@ -141,7 +141,7 @@ TEST_CASE( "Basic Industry usage with unsigned ids", "[Industry, Factory]" )
         {
             auto factoryA( industry.registerFactory< BaseA >() );
             REQUIRE( industry.hasFactory< BaseA >() );
-            auto objA( factoryA->create() );
+            auto objA( factoryA->create< BaseA >() );
             REQUIRE( objA != nullptr );
             REQUIRE( objA->getControlString() == "BaseA" );
 

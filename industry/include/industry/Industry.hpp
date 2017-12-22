@@ -34,7 +34,6 @@
 
 #include "Factory.hpp"
 #include <memory>
-#include <stdexcept>
 #include <typeindex>
 #include <unordered_map>
 
@@ -171,4 +170,4 @@ inline bool Industry< IdT >::hasFactory( const std::type_index& index ) const no
 
 } // namespace industry
 
-#endif /* INDUSTRY__INDUSTRY_HPP */
+#endif // INDUSTRY__INDUSTRY_HPP

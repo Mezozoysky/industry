@@ -33,7 +33,6 @@
 #define INDUSTRY__FACTORY_HPP
 
 #include <functional>
-#include <stdexcept>
 #include <unordered_map>
 
 namespace industry
@@ -70,9 +69,6 @@ public:
     /// Virtual destructor for possible inheritance
     virtual ~Factory() noexcept = default;
 
-    /// \brief Create an object of specified AbstractionT type and return pointer to it
-    static AbstractionT* create();
-
     /// \brief Create an object of specified derived type ReqT and return pointer to it
     template < typename ReqT >
     static ReqT* create();
@@ -88,12 +84,6 @@ private:
     std::unordered_map< Id, Creator > mMap; ///< Ids to object creation function map
 };
 
-
-template < typename AbstractionT, typename IdT >
-AbstractionT* Factory< AbstractionT, IdT >::create()
-{
-    return ( new AbstractionT() );
-}
 
 template < typename AbstractionT, typename IdT >
 template < typename ReqT >
@@ -141,4 +131,4 @@ AbstractionT* Factory< AbstractionT, IdT >::create( const IdT& id ) const
 
 } // namespace industry
 
-#endif /* INDUSTRY__FACTORY_HPP */
+#endif // INDUSTRY__FACTORY_HPP
