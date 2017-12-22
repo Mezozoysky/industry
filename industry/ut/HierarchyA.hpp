@@ -6,38 +6,50 @@ namespace ut
 class BaseA
 {
 public:
-    BaseA() = default;
+    BaseA()
+    {
+        mControlString = "BaseA";
+    }
+
     virtual ~BaseA() noexcept = default;
 
-    // virtual std::string getControlString() = 0;
-    virtual std::string getControlString()
+    // virtual void abstractMethod() = 0;
+    const std::string& getControlString() const noexcept
     {
-        return ( "BaseA" );
+        return ( mControlString );
     }
+
+    void setControlString( const std::string& str ) noexcept
+    {
+        mControlString = str;
+    }
+
+protected:
+    std::string mControlString;
 };
 
 class DerivedA0A : public BaseA
 {
 public:
-    DerivedA0A() = default;
-    virtual ~DerivedA0A() noexcept = default;
-
-    virtual std::string getControlString() override
+    DerivedA0A()
+    : BaseA()
     {
-        return ( "DerivedA0A" );
+        mControlString = "DerivedA0A";
     }
+
+    virtual ~DerivedA0A() noexcept = default;
 };
 
 class DerivedA0B : public BaseA
 {
 public:
-    DerivedA0B() = default;
-    virtual ~DerivedA0B() noexcept = default;
-
-    virtual std::string getControlString() override
+    DerivedA0B()
+    : BaseA()
     {
-        return ( "DerivedA0B" );
+        mControlString = "DerivedA0B";
     }
+
+    virtual ~DerivedA0B() noexcept = default;
 };
 
 } // namespace ut
