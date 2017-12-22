@@ -13,8 +13,7 @@ set(GROUP_HEADERS
     )
 set(GROUP_SOURCES
     ${MODULE_UT_ROOT}/main.cpp
-	${MODULE_UT_ROOT}/tests_Factory.cpp
-	${MODULE_UT_ROOT}/tests_Industry.cpp
+	${MODULE_UT_ROOT}/tests_BasicUsage.cpp
     )
 source_group( "${MODULE_NAME}\\ut" FILES ${GROUP_HEADERS} ${GROUP_SOURCES} )
 set( MODULE_UT_HEADERS ${MODULE_UT_HEADERS} ${GROUP_HEADERS} )
