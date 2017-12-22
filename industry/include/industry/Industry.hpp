@@ -49,10 +49,11 @@ private:
     using TypeMap = std::unordered_map< std::type_index, MarkerPtr >;
 
 public:
-    Industry() = default; ///< Default constructor
+    /// Default constructor
+    Industry() = default;
+    ///< Virtual destructor for possible inheritance
+    virtual ~Industry() noexcept = default;
     Industry( const Industry& ) = delete;
-    virtual ~Industry() noexcept = default; ///< Virtual destructor for possible
-                                            ///< inheritance
     Industry& operator=( const Industry& ) = delete;
 
     /// Create and register factory for specified abstraction type
@@ -97,7 +98,8 @@ std::shared_ptr< Factory< AbstractionT > > Industry::registerFactory() noexcept
 }
 
 template < typename AbstractionT >
-bool Industry::registerFactory( const std::shared_ptr< Factory< AbstractionT > >& factory ) noexcept
+bool Industry::registerFactory(
+const std::shared_ptr< Factory< AbstractionT > >& factory ) noexcept
 {
     std::type_index index{ typeid( AbstractionT ) };
     if ( hasFactory( index ) )

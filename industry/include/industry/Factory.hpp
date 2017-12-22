@@ -43,10 +43,14 @@ namespace industry
 class FactoryMarker
 {
 public:
-    FactoryMarker() noexcept = default; ///< Default constructor
-    FactoryMarker( const FactoryMarker& ) = default; ///< Default copy constructor
-    virtual ~FactoryMarker() noexcept = default; ///< Default destructor
-    FactoryMarker& operator=( const FactoryMarker& ) = default; ///< Default assign operator
+    /// Default constructor
+    FactoryMarker() noexcept = default;
+    /// Default copy constructor
+    FactoryMarker( const FactoryMarker& ) = default;
+    /// Virtual destructor for inheritance
+    virtual ~FactoryMarker() noexcept = default;
+    /// Default assign operator
+    FactoryMarker& operator=( const FactoryMarker& ) = default;
 };
 
 /// \brief Factory template
@@ -54,15 +58,17 @@ template < typename AbstractionT, typename IdT = std::string >
 class Factory : public FactoryMarker
 {
 private:
+    /// Alias type for object creation functions
     using Creator = std::function< AbstractionT*() >;
-    ///< Alias type for object creation functions
 
 public:
     using Id = IdT; ///< Alias type for specified id type
     using Abstraction = AbstractionT; ///< Alias type for specified abstraction type
 
-    Factory() = default; ///< Default constructor
-    virtual ~Factory() noexcept = default; ///< Default destructor
+    /// Default constructor
+    Factory() = default;
+    /// Virtual destructor for possible inheritance
+    virtual ~Factory() noexcept = default;
 
     /// \brief Create an object of specified AbstractionT type and return pointer to it
     static AbstractionT* create();
