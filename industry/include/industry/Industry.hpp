@@ -96,7 +96,7 @@ std::shared_ptr< Factory< AbstractionT, IdT > >
 Industry< IdT >::registerFactory() noexcept
 {
     std::type_index index{ typeid( AbstractionT ) };
-    auto factory( std::make_shared< Factory< AbstractionT > >() );
+    auto factory( std::make_shared< Factory< AbstractionT, IdT > >() );
 
     if ( registerFactory( index, factory ) )
     {
