@@ -33,8 +33,8 @@
 #define INDUSTRY__FACTORY_HPP
 
 #include <functional>
-#include <stdexcept>
 #include <unordered_map>
+#include <string>
 
 namespace industry
 {
@@ -54,7 +54,7 @@ public:
 };
 
 /// \brief Factory template
-template < typename AbstractionT, typename IdT = std::string >
+template < typename AbstractionT >
 class Factory : public FactoryMarker
 {
 private:
@@ -62,7 +62,7 @@ private:
     using Creator = std::function< AbstractionT*() >;
 
 public:
-    using Id = IdT; ///< Alias type for specified id type
+    using Id = std::string; ///< Alias type for specified id type
     using Abstraction = AbstractionT; ///< Alias type for specified abstraction type
 
     /// Default constructor
@@ -82,22 +82,22 @@ public:
     bool registerId( const Id& id ) noexcept;
 
     /// \brief Create an object of type registered with the id and return pointer to it
-    AbstractionT* create( const IdT& id ) const;
+    AbstractionT* create( const Id& id ) const;
 
 private:
     std::unordered_map< Id, Creator > mMap; ///< Ids to object creation function map
 };
 
 
-template < typename AbstractionT, typename IdT >
-AbstractionT* Factory< AbstractionT, IdT >::create()
+template < typename AbstractionT >
+AbstractionT* Factory< AbstractionT >::create()
 {
     return ( new AbstractionT() );
 }
 
-template < typename AbstractionT, typename IdT >
+template < typename AbstractionT >
 template < typename ReqT >
-ReqT* Factory< AbstractionT, IdT >::create()
+ReqT* Factory< AbstractionT >::create()
 {
     static_assert( std::is_default_constructible< ReqT >::value,
                    "ReqT should have default constructor" );
@@ -108,9 +108,9 @@ ReqT* Factory< AbstractionT, IdT >::create()
     return ( new ReqT() );
 }
 
-template < typename AbstractionT, typename IdT >
+template < typename AbstractionT >
 template < typename RegT >
-bool Factory< AbstractionT, IdT >::registerId( const IdT& id ) noexcept
+bool Factory< AbstractionT >::registerId( const Id& id ) noexcept
 {
     static_assert( std::is_default_constructible< RegT >::value,
                    "RegT should have default constructor" );
@@ -127,8 +127,8 @@ bool Factory< AbstractionT, IdT >::registerId( const IdT& id ) noexcept
     return ( true );
 }
 
-template < typename AbstractionT, typename IdT >
-AbstractionT* Factory< AbstractionT, IdT >::create( const IdT& id ) const
+template < typename AbstractionT >
+AbstractionT* Factory< AbstractionT >::create( const Id& id ) const
 {
     AbstractionT* a{ nullptr };
 
