@@ -73,6 +73,13 @@ public:
     template < typename AbstractionT >
     bool hasFactory() const noexcept;
 
+    /// Register given factory for given type index
+    bool registerFactory( const std::type_index& index,
+                          const MarkerPtr& factory ) noexcept;
+
+    /// Get register factory for given index type
+    MarkerPtr getFactory( const std::type_index& index ) const noexcept;
+
     /// Check if factory is registered for given type index
     inline bool hasFactory( const std::type_index& index ) const noexcept;
 
@@ -85,16 +92,14 @@ template < typename AbstractionT >
 std::shared_ptr< Factory< AbstractionT > > Industry::registerFactory() noexcept
 {
     std::type_index index{ typeid( AbstractionT ) };
-    if ( hasFactory( index ) )
-    {
-        return ( nullptr );
-    }
-
     auto factory( std::make_shared< Factory< AbstractionT > >() );
 
-    mFactories[ index ] = factory;
+    if ( registerFactory( index, factory ) )
+    {
+        return ( factory );
+    }
 
-    return ( factory );
+    return ( nullptr );
 }
 
 template < typename AbstractionT >
@@ -102,6 +107,30 @@ bool Industry::registerFactory(
 const std::shared_ptr< Factory< AbstractionT > >& factory ) noexcept
 {
     std::type_index index{ typeid( AbstractionT ) };
+    return ( registerFactory( index, factory ) );
+}
+
+template < typename AbstractionT >
+std::shared_ptr< Factory< AbstractionT > > Industry::getFactory() const noexcept
+{
+    std::type_index index{ typeid( AbstractionT ) };
+    return ( std::static_pointer_cast< Factory< AbstractionT > >( getFactory( index ) ) );
+}
+
+template < typename AbstractionT >
+bool Industry::hasFactory() const noexcept
+{
+    std::type_index index{ typeid( AbstractionT ) };
+    return ( hasFactory( index ) );
+}
+
+bool Industry::registerFactory( const std::type_index& index,
+                                const MarkerPtr& factory ) noexcept
+{
+    if ( factory == nullptr )
+    {
+        return ( false );
+    }
     if ( hasFactory( index ) )
     {
         return ( false );
@@ -111,26 +140,14 @@ const std::shared_ptr< Factory< AbstractionT > >& factory ) noexcept
     return ( true );
 }
 
-template < typename AbstractionT >
-std::shared_ptr< Factory< AbstractionT > > Industry::getFactory() const noexcept
+Industry::MarkerPtr Industry::getFactory( const std::type_index& index ) const noexcept
 {
-    std::type_index index{ typeid( AbstractionT ) };
     if ( !( hasFactory( index ) ) )
     {
         return ( nullptr );
     }
 
-    auto factory(
-    std::static_pointer_cast< Factory< AbstractionT > >( mFactories.at( index ) ) );
-
-    return ( factory );
-}
-
-template < typename AbstractionT >
-bool Industry::hasFactory() const noexcept
-{
-    std::type_index index{ typeid( AbstractionT ) };
-    return ( hasFactory( index ) );
+    return ( mFactories.at( index ) );
 }
 
 inline bool Industry::hasFactory( const std::type_index& index ) const noexcept
