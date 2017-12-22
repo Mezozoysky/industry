@@ -42,11 +42,13 @@ namespace industry
 {
 
 /// \brief Centralized storage for factories
+template < typename IdT = std::string >
 class Industry
 {
 private:
     using MarkerPtr = std::shared_ptr< FactoryMarker >;
     using TypeMap = std::unordered_map< std::type_index, MarkerPtr >;
+    using Id = IdT;
 
 public:
     /// Default constructor
@@ -58,16 +60,16 @@ public:
 
     /// Create and register factory for specified abstraction type
     template < typename AbstractionT >
-    std::shared_ptr< Factory< AbstractionT > > registerFactory() noexcept;
+    std::shared_ptr< Factory< AbstractionT, IdT > > registerFactory() noexcept;
 
     /// Register given factory for specified abstraction type
     template < typename AbstractionT >
-    bool
-    registerFactory( const std::shared_ptr< Factory< AbstractionT > >& factory ) noexcept;
+    bool registerFactory(
+    const std::shared_ptr< Factory< AbstractionT, IdT > >& factory ) noexcept;
 
     /// Get registered factory for specified abstraction type
     template < typename AbstractionT >
-    std::shared_ptr< Factory< AbstractionT > > getFactory() const noexcept;
+    std::shared_ptr< Factory< AbstractionT, IdT > > getFactory() const noexcept;
 
     /// Check if factory is registered for specified abstraction type
     template < typename AbstractionT >
@@ -88,8 +90,10 @@ private:
 };
 
 
+template < typename IdT >
 template < typename AbstractionT >
-std::shared_ptr< Factory< AbstractionT > > Industry::registerFactory() noexcept
+std::shared_ptr< Factory< AbstractionT, IdT > >
+Industry< IdT >::registerFactory() noexcept
 {
     std::type_index index{ typeid( AbstractionT ) };
     auto factory( std::make_shared< Factory< AbstractionT > >() );
@@ -102,30 +106,36 @@ std::shared_ptr< Factory< AbstractionT > > Industry::registerFactory() noexcept
     return ( nullptr );
 }
 
+template < typename IdT >
 template < typename AbstractionT >
-bool Industry::registerFactory(
-const std::shared_ptr< Factory< AbstractionT > >& factory ) noexcept
+bool Industry< IdT >::registerFactory(
+const std::shared_ptr< Factory< AbstractionT, IdT > >& factory ) noexcept
 {
     std::type_index index{ typeid( AbstractionT ) };
     return ( registerFactory( index, factory ) );
 }
 
+template < typename IdT >
 template < typename AbstractionT >
-std::shared_ptr< Factory< AbstractionT > > Industry::getFactory() const noexcept
+std::shared_ptr< Factory< AbstractionT, IdT > > Industry< IdT >::getFactory() const
+noexcept
 {
     std::type_index index{ typeid( AbstractionT ) };
-    return ( std::static_pointer_cast< Factory< AbstractionT > >( getFactory( index ) ) );
+    return (
+    std::static_pointer_cast< Factory< AbstractionT, IdT > >( getFactory( index ) ) );
 }
 
+template < typename IdT >
 template < typename AbstractionT >
-bool Industry::hasFactory() const noexcept
+bool Industry< IdT >::hasFactory() const noexcept
 {
     std::type_index index{ typeid( AbstractionT ) };
     return ( hasFactory( index ) );
 }
 
-bool Industry::registerFactory( const std::type_index& index,
-                                const MarkerPtr& factory ) noexcept
+template < typename IdT >
+bool Industry< IdT >::registerFactory( const std::type_index& index,
+                                       const MarkerPtr& factory ) noexcept
 {
     if ( factory == nullptr )
     {
@@ -140,7 +150,9 @@ bool Industry::registerFactory( const std::type_index& index,
     return ( true );
 }
 
-Industry::MarkerPtr Industry::getFactory( const std::type_index& index ) const noexcept
+template < typename IdT >
+typename Industry< IdT >::MarkerPtr
+Industry< IdT >::getFactory( const std::type_index& index ) const noexcept
 {
     if ( !( hasFactory( index ) ) )
     {
@@ -150,7 +162,8 @@ Industry::MarkerPtr Industry::getFactory( const std::type_index& index ) const n
     return ( mFactories.at( index ) );
 }
 
-inline bool Industry::hasFactory( const std::type_index& index ) const noexcept
+template < typename IdT >
+inline bool Industry< IdT >::hasFactory( const std::type_index& index ) const noexcept
 {
     return ( mFactories.count( index ) );
 }

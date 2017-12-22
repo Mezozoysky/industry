@@ -9,7 +9,7 @@ using namespace ut;
 
 TEST_CASE( "Basic Industry usage", "[Industry]" )
 {
-    Industry industry;
+    Industry<> industry;
 
     {
         auto factoryA( industry.registerFactory< BaseA >() );
@@ -44,7 +44,7 @@ TEST_CASE( "Basic Industry usage", "[Industry]" )
 
 TEST_CASE( "Basic Industry usage 2", "[Industry]" )
 {
-    Industry industry;
+    Industry<> industry;
 
     using FactoryA = Factory< BaseA >;
     using FactoryAPtr = std::shared_ptr< FactoryA >;
