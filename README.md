@@ -27,7 +27,7 @@ see full license text in LICENSE.md file or at https://opensource.org/licenses/Z
 
 ### Way 1 (easiest)
 
-Just grab the `Factory.hpp` and `Industry.hpp` files from industry project and put into your project's sources.
+Just grab `Factory.hpp` and `Industry.hpp` files from industry project and put them into your project's sources.
 
 ### Way 2
 
