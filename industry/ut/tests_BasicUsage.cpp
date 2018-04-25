@@ -56,7 +56,9 @@ TEST_CASE( "Basic Factory usage with std::string ids", "[Factory]" )
     }
 
     factory.registerId< DerivedA0A >( "0A" );
+    REQUIRE( factory.hasId( "0A" ) );
     factory.registerId< DerivedA0B >( "0B" );
+    REQUIRE( factory.hasId( "0B" ) );
 
     // create derived by id
     {

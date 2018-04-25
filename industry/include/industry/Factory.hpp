@@ -80,6 +80,9 @@ public:
     template < typename RegT >
     bool registerId( const Id& id, const Creator& creator ) noexcept;
 
+    /// \brief Return true if the given id registered, false otherwise
+    inline bool hasId( const Id& id ) const noexcept;
+
     /// \brief Create an object of type registered with the id and return pointer to it
     AbstractionT* create( const IdT& id ) const;
 
@@ -138,6 +141,12 @@ const IdT& id, const Factory< AbstractionT, IdT >::Creator& creator ) noexcept
 
     mMap.insert( std::pair< Id, Creator >( id, creator ) );
     return ( true );
+}
+
+template < typename AbstractionT, typename IdT >
+inline bool Factory< AbstractionT, IdT >::hasId( const Id& id ) const noexcept
+{
+    return ( mMap.count( id ) );
 }
 
 template < typename AbstractionT, typename IdT >
